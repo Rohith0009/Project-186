@@ -21,7 +21,9 @@ def startDecryption():
     decryption_text_data = Text(decryption_window, height=20, width=72)
     decryption_text_data.place(relx=0.5, rely=0.35, anchor=CENTER)
 
-    btn_open_file = Button(decryption_window, text="Choose File..", font="arial 13")
+    btn_open_file = Button(
+        decryption_window, text="Choose File..", font="arial 13", command=viewData
+    )
     btn_open_file.place(relx=0.5, rely=0.8, anchor=CENTER)
 
     decryption_window.mainloop()
@@ -62,6 +64,20 @@ def saveData():
     file.write(hexed)
     file_name_entry.delete(0, END)
     encryption_text_data.delete(1.0, END)
+
+
+def viewData():
+    global decryption_text_data
+    File_path = filedialog.askopenfilename(
+        title="select fast", filetypes=[("Text Files", "*.txt")]
+    )
+    name = os.path.basename(File_path)
+    text_file = open(File_path, "r")
+    paragraph = text_file.read()
+    bytes_str = bytes.fromhex(paragraph)
+    original = decrypt("Pass", bytes_str)
+    final_data = original.decode("utf-8")
+    decryption_text_data.insert(END, final_data)
 
 
 heading_label = Label(root, text="Encryption & Decryption", font="arial 18 italic")
